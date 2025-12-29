@@ -18,7 +18,8 @@
 
         <div class="filter-container">
             <form action="${pageContext.request.contextPath}/home" method="get">
-                <select name="location">
+                <select name="loc
+                ation">
                     <option value="">All Locations</option>
                     <option value="Kathmandu" ${"Kathmandu".equals(request.getAttribute("selectedLocation")) ? "selected" : ""}>Kathmandu</option>
                     <option value="Pokhara" ${"Pokhara".equals(request.getAttribute("selectedLocation")) ? "selected" : ""}>Pokhara</option>
