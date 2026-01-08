@@ -1,0 +1,6 @@
+target/
+*.class
+*.war
+.idea/
+*.iml
+src/main/webapp/uploads/

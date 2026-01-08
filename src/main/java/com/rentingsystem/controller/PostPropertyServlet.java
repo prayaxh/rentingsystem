@@ -112,10 +112,32 @@ public class PostPropertyServlet extends HttpServlet {
 
             for (Part part : request.getParts()) {
                 if (part.getName().equals("imageFiles") && part.getSize() > 0) {
-                    String fileName = UUID.randomUUID().toString() + "_" + Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                    // Sanitize filename: remove spaces and special chars, keep extension
+                    String originalFileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                    String extension = "";
+                    int i = originalFileName.lastIndexOf('.');
+                    if (i > 0) {
+                        extension = originalFileName.substring(i);
+                    }
+                    String sanitizedFileName = originalFileName.replaceAll("[^a-zA-Z0-9.-]", "_");
+                    
+                    String fileName = UUID.randomUUID().toString() + "_" + sanitizedFileName;
                     String filePath = uploadPath + File.separator + fileName;
+                    
                     try (InputStream input = part.getInputStream()) {
+                        // Save to deployment directory (target/...)
                         Files.copy(input, new File(filePath).toPath());
+                        
+                        // Attempt to save to source directory for persistence (Dev mode)
+                        // Assuming standard Maven structure: target/rentingsystem/ -> src/main/webapp/
+                        File deployDir = new File(getServletContext().getRealPath(""));
+                        File projectRoot = deployDir.getParentFile().getParentFile(); // Up from target/rentingsystem
+                        File srcDir = new File(projectRoot, "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "uploads" + File.separator + "images");
+                        
+                        if (srcDir.exists() || srcDir.mkdirs()) {
+                             Files.copy(new File(filePath).toPath(), new File(srcDir, fileName).toPath());
+                        }
+
                         String imageUrl = request.getContextPath() + "/uploads/images/" + fileName;
                         propertyDAO.addPropertyImage(propertyId, imageUrl);
                     } catch (IOException e) {
