@@ -1,7 +1,9 @@
 package com.rentingsystem.controller;
 
+import com.rentingsystem.dao.BookingDAO;
 import com.rentingsystem.dao.PropertyDAO;
 import com.rentingsystem.model.Property;
+import com.rentingsystem.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,22 +28,25 @@ import java.util.UUID;
         maxRequestSize = 1024 * 1024 * 50)
 public class EditPropertyServlet extends HttpServlet {
     private PropertyDAO propertyDAO;
+    private BookingDAO bookingDAO; // Declare BookingDAO
 
     @Override
     public void init() throws ServletException {
         super.init();
         propertyDAO = new PropertyDAO();
+        bookingDAO = new BookingDAO(); // Initialize BookingDAO
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userId") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
         }
 
-        int userId = (int) session.getAttribute("userId");
+        User currentUser = (User) session.getAttribute("user");
+        int userId = currentUser.getId();
         int propertyId = 0;
         try {
             propertyId = Integer.parseInt(request.getParameter("propertyId"));
@@ -75,12 +80,13 @@ public class EditPropertyServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userId") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
         }
 
-        int userId = (int) session.getAttribute("userId");
+        User currentUser = (User) session.getAttribute("user");
+        int userId = currentUser.getId();
         String action = request.getParameter("action");
         int propertyId = Integer.parseInt(request.getParameter("propertyId"));
 
@@ -177,6 +183,12 @@ public class EditPropertyServlet extends HttpServlet {
                 break;
 
             case "delete":
+                if (bookingDAO.hasConfirmedBookings(propertyId)) {
+                    request.setAttribute("errorMessage", "Cannot delete property with active confirmed bookings.");
+                    doGet(request, response);
+                    return;
+                }
+
                 if (propertyDAO.deleteProperty(propertyId)) {
                     response.sendRedirect(request.getContextPath() + "/postHistory");
                 } else {

@@ -165,25 +165,41 @@ public class PropertyDAO {
 
     public boolean deleteProperty(int propertyId) {
         String deleteImagesSql = "DELETE FROM property_images WHERE property_id = ?";
+        String deleteBookingsSql = "DELETE FROM bookings WHERE property_id = ?"; // NEW: Delete associated bookings
         String deletePropertySql = "DELETE FROM properties WHERE property_id = ?";
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
+            System.out.println("PropertyDAO: Attempting to delete property with ID: " + propertyId);
 
             try (PreparedStatement stmtImages = conn.prepareStatement(deleteImagesSql)) {
                 stmtImages.setInt(1, propertyId);
-                stmtImages.executeUpdate();
+                int imagesDeleted = stmtImages.executeUpdate();
+                System.out.println("PropertyDAO: Deleted " + imagesDeleted + " images for property ID: " + propertyId);
+            }
+
+            // NEW: Delete associated bookings before deleting the property
+            try (PreparedStatement stmtBookings = conn.prepareStatement(deleteBookingsSql)) {
+                stmtBookings.setInt(1, propertyId);
+                int bookingsDeleted = stmtBookings.executeUpdate();
+                System.out.println("PropertyDAO: Deleted " + bookingsDeleted + " bookings for property ID: " + propertyId);
             }
 
             try (PreparedStatement stmtProperty = conn.prepareStatement(deletePropertySql)) {
                 stmtProperty.setInt(1, propertyId);
                 int rowsAffected = stmtProperty.executeUpdate();
+                System.out.println("PropertyDAO: Deleted " + rowsAffected + " properties for property ID: " + propertyId);
                 conn.commit();
                 return rowsAffected > 0;
             } catch (SQLException e) {
                 conn.rollback();
-                throw e;
+                System.err.println("PropertyDAO: SQL Exception during property deletion, rolling back transaction. Property ID: " + propertyId + ", Error: " + e.getMessage());
+                throw e; // Re-throw to propagate the original error
             }
         } catch (SQLException e) {
+            System.err.println("PropertyDAO: SQL Exception during transaction setup/rollback for property ID: " + propertyId + ", Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("PropertyDAO: Unexpected Exception during property deletion for property ID: " + propertyId + ", Error: " + e.getMessage());
             e.printStackTrace();
         }
         return false;

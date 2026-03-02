@@ -1,0 +1,166 @@
+.my-bookings-container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Light background for the container */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.my-bookings-container h2 {
+    color: #343a40;
+    margin-bottom: 25px;
+    font-size: 2em;
+    text-align: center;
+}
+
+.my-bookings-container h3 {
+    color: #495057;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+.my-bookings-container .property-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.my-bookings-container .property-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.my-bookings-container .property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.my-bookings-container .property-card h4 {
+    background-color: #007bff; /* Primary color for card header */
+    color: #ffffff;
+    padding: 15px;
+    margin: 0;
+    font-size: 1.3em;
+}
+
+.my-bookings-container .property-card p {
+    padding: 0 15px;
+    margin-bottom: 8px;
+    color: #6c757d;
+    font-size: 0.95em;
+}
+
+.my-bookings-container .property-card p strong {
+    color: #343a40;
+}
+
+.my-bookings-container .property-card a {
+    display: block;
+    padding: 10px 15px;
+    background-color: #e9ecef;
+    color: #007bff;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    border-top: 1px solid #dee2e6;
+    transition: background-color 0.2s ease;
+}
+
+.my-bookings-container .property-card a:hover {
+    background-color: #d6d8db;
+}
+
+.my-bookings-container .alert-info {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    text-align: center;
+}
+
+.my-bookings-container .no-posts {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+.my-bookings-container hr {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+/* Button Styling for Accept/Reject/Cancel */
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    border: 1px solid transparent;
+}
+
+.btn-success {
+    background-color: #28a745; /* Green for Accept */
+    color: #fff;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Red for Reject */
+    color: #fff;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    transform: translateY(-1px);
+}
+
+.btn-warning {
+    background-color: #ffc107; /* Yellow for Cancel */
+    color: #212529; /* Dark text for contrast */
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+    transform: translateY(-1px);
+}
+
+/* Small button variant */
+.btn-small {
+    padding: 5px 10px;
+    font-size: 0.8em;
+}
+
+/* Specific status styling */
+.my-bookings-container .property-card p.status-pending { color: #ffc107; font-weight: bold; } /* Warning yellow */
+.my-bookings-container .property-card p.status-confirmed { color: #28a745; font-weight: bold; } /* Success green */
+.my-bookings-container .property-card p.status-cancelled { color: #dc3545; font-weight: bold; } /* Danger red */
+.my-bookings-container .property-card p.status-rejected { color: #dc3545; font-weight: bold; } /* Danger red */

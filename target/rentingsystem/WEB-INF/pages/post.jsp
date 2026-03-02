@@ -50,7 +50,7 @@
             <div class="form-row">
                 <div class="input-group">
                     <label for="price">Price:</label>
-                    <input type="number" id="price" name="price" step="0.01" value="<%= request.getParameter("price") != null ? request.getParameter("price") : "" %>" required>
+                    <input type="number" id="price" name="price" step="0.01" min="0" value="<%= request.getParameter("price") != null ? request.getParameter("price") : "" %>" required>
                 </div>
                 <div class="input-group">
                     <label for="currency">Currency:</label>

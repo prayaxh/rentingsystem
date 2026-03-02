@@ -36,8 +36,8 @@ public class LoginServlet extends HttpServlet {
         String identifier = request.getParameter("identifier");
         String password = request.getParameter("password");
 
-        System.out.println("LoginServlet: Attempting login for identifier: " + identifier);
-        System.out.println("LoginServlet: Password provided: " + password);
+//        System.out.println("LoginServlet: Attempting login for identifier: " + identifier);
+//        System.out.println("LoginServlet: Password provided: " + password);
 
         if (identifier == null || identifier.isEmpty() || password == null || password.isEmpty()) {
             System.out.println("LoginServlet: Empty identifier or password.");
@@ -53,8 +53,7 @@ public class LoginServlet extends HttpServlet {
             if (user.getPassword().equals(password)) {
                 System.out.println("LoginServlet: Password matches. Login successful.");
                 HttpSession session = request.getSession();
-                session.setAttribute("userId", user.getId());
-                session.setAttribute("username", user.getUsername());
+                session.setAttribute("user", user);
                 response.sendRedirect(request.getContextPath() + "/home");
             } else {
                 System.out.println("LoginServlet: Password mismatch.");

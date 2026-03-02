@@ -29,6 +29,10 @@
                 <i class="material-icons">history</i>
                 <span>My Posts</span>
             </a>
+            <a href="${pageContext.request.contextPath}/myBookings" class="header__link">
+                <i class="material-icons">book</i>
+                <span>Bookings</span>
+            </a>
         </div>
     </header>
 </body>

@@ -1,7 +1,9 @@
 package com.rentingsystem.controller;
 
+import com.rentingsystem.dao.BookingDAO;
 import com.rentingsystem.dao.PropertyDAO;
 import com.rentingsystem.model.Property;
+import com.rentingsystem.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,11 +16,13 @@ import java.io.IOException;
 @WebServlet("/deleteProperty")
 public class DeletePropertyServlet extends HttpServlet {
     private PropertyDAO propertyDAO;
+    private BookingDAO bookingDAO; // Declare BookingDAO
 
     @Override
     public void init() throws ServletException {
         super.init();
         propertyDAO = new PropertyDAO();
+        bookingDAO = new BookingDAO(); // Initialize BookingDAO
     }
 
     @Override
@@ -27,17 +31,23 @@ public class DeletePropertyServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("userId") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             response.getWriter().write("{\"success\": false, \"message\": \"User not logged in.\"}");
             return;
         }
 
         try {
             int propertyId = Integer.parseInt(request.getParameter("propertyId"));
-            int userId = (int) session.getAttribute("userId");
+            User currentUser = (User) session.getAttribute("user");
+            int userId = currentUser.getId();
 
             Property property = propertyDAO.getPropertyById(propertyId);
             if (property != null && property.getUserId() == userId) {
+                if (bookingDAO.hasConfirmedBookings(propertyId)) {
+                    response.getWriter().write("{\"success\": false, \"message\": \"Cannot delete property with active confirmed bookings.\"}");
+                    return;
+                }
+
                 boolean deleted = propertyDAO.deleteProperty(propertyId);
                 if (deleted) {
                     response.getWriter().write("{\"success\": true, \"message\": \"Property deleted successfully.\"}");
