@@ -19,7 +19,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet({"/bookProperty", "/myBookings"})
+@WebServlet({"/bookProperty", "/myBookings", "/bookerDetails"})
 public class BookingServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private BookingDAO bookingDAO;
@@ -59,8 +59,34 @@ public class BookingServlet extends HttpServlet {
 
         if ("/myBookings".equals(action)) {
             displayMyBookings(request, response);
+        } else if ("/bookerDetails".equals(action)) { // NEW: Handle booker details request
+            displayBookerDetails(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action for GET request.");
+        }
+    }
+
+    // NEW: Method to display booker details
+    private void displayBookerDetails(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("login"); // Redirect to login if not authenticated
+            return;
+        }
+
+        try {
+            int bookerId = Integer.parseInt(request.getParameter("userId"));
+            User booker = userDAO.getUserById(bookerId);
+            if (booker != null) {
+                request.setAttribute("booker", booker);
+                request.getRequestDispatcher("/WEB-INF/pages/bookerDetails.jsp").forward(request, response);
+            } else {
+                session.setAttribute("message", "Booker not found.");
+                response.sendRedirect("myBookings"); // Redirect back if booker not found
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "Invalid booker ID.");
+            response.sendRedirect("myBookings");
         }
     }
 

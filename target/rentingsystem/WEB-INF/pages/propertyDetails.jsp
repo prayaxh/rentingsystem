@@ -112,6 +112,46 @@
         document.getElementById('lightbox').style.display = 'none';
         document.body.style.overflow = 'auto';
     }
+
+    function validateBookingDates() {
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
+        const today = new Date();
+
+        // Clear time components for accurate date comparison
+        today.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+
+        // 1. Check if startDate is in the future
+        if (startDate <= today) {
+            alert('Booking start date must be in the future.');
+            return false;
+        }
+
+        // 2. Check if startDate is before or on the same day as endDate
+        if (startDate > endDate) {
+            alert('Booking start date cannot be after the end date.');
+            return false;
+        }
+
+        return true;
+    }
+
+    // Attach validation to the form submission
+    document.addEventListener('DOMContentLoaded', function() {
+        const bookingForm = document.querySelector('.book-now-section form');
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', function(event) {
+                if (!validateBookingDates()) {
+                    event.preventDefault(); // Prevent form submission if validation fails
+                }
+            });
+        }
+    });
 </script>
 </body>
 </html>

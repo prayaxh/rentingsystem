@@ -58,15 +58,16 @@
                             <p><strong>Booked By:</strong> <c:out value="${booker.name}"/></p>
                             <p><strong>Booker Contact:</strong> <c:out value="${booker.email}"/>, <c:out value="${booker.phone}"/></p>
                             <p><strong>Booking Dates:</strong> <fmt:formatDate value="${booking.startDate}" pattern="yyyy-MM-dd"/> to <fmt:formatDate value="${booking.endDate}" pattern="yyyy-MM-dd"/></p>
-                            <p><a href="${pageContext.request.contextPath}/propertyDetails?propertyId=<c:out value="${property.id}"/>">View Details</a></p>
-                            <c:if test="${booking.status eq 'pending'}">
-                                <div class="booking-actions">
-                                    <form action="${pageContext.request.contextPath}/myBookings" method="post" style="display:inline;">
+                            <p>
+                                <a href="${pageContext.request.contextPath}/propertyDetails?propertyId=<c:out value="${property.id}"/>" class="btn btn-info btn-small">Property Details</a>
+                                <a href="${pageContext.request.contextPath}/bookerDetails?userId=<c:out value="${booker.id}"/>" class="btn btn-secondary btn-small">Booker Details</a>                            </p>                            <c:if test="${booking.status eq 'pending'}">
+                                <div class="booking-actions" style="text-align: center;">
+                                    <form action="${pageContext.request.contextPath}/myBookings" method="post" style="display:inline-block; margin-right: 5px;">
                                         <input type="hidden" name="action" value="acceptBooking">
                                         <input type="hidden" name="bookingId" value="${booking.bookingId}">
                                         <button type="submit" class="btn btn-success btn-small">Accept</button>
                                     </form>
-                                    <form action="${pageContext.request.contextPath}/myBookings" method="post" style="display:inline; margin-left: 10px;">
+                                    <form action="${pageContext.request.contextPath}/myBookings" method="post" style="display:inline-block; margin-left: 5px;">
                                         <input type="hidden" name="action" value="rejectBooking">
                                         <input type="hidden" name="bookingId" value="${booking.bookingId}">
                                         <button type="submit" class="btn btn-danger btn-small">Reject</button>

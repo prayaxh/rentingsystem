@@ -30,12 +30,12 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
+        String name = request.getParameter("name").trim();
+        String username = request.getParameter("username").trim();
+        String email = request.getParameter("email").trim();
+        String phone = request.getParameter("phone").trim();
+        String password = request.getParameter("password").trim();
+        String confirmPassword = request.getParameter("confirmPassword").trim();
 
         if (name == null || name.isEmpty() || username == null || username.isEmpty() ||
             email == null || email.isEmpty() || phone == null || phone.isEmpty() ||
